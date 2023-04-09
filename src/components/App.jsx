@@ -14,14 +14,20 @@ const App = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isShowModal, setIsShowModal] = useState(false);
   const [isShowLoadmore, setIsShowLoadmore] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchImages = () => {
-      getImages(searchQuery, currentPage).then(images => {
-        setImages(prevImages => [...prevImages, ...images.hits]);
-        setIsShowLoadmore(currentPage < Math.ceil(images.totalHits / 12));
-        setStatus('resolved');
-      });
+      getImages(searchQuery, currentPage)
+        .then(images => {
+          setImages(prevImages => [...prevImages, ...images.hits]);
+          setIsShowLoadmore(currentPage < Math.ceil(images.totalHits / 12));
+          setStatus('resolved');
+        })
+        .catch(error => {
+          setError(error);
+          setStatus('rejected');
+        });
     };
     if (searchQuery === '') {
       return;
@@ -57,9 +63,7 @@ const App = () => {
       )}
       {status === 'pending' && <Loader />}
       {status === 'rejected' && (
-        <h2 className={css.appHeaders}>
-          Oops, something went wrong. Please try again later.
-        </h2>
+        <h2 className={css.appHeaders}>{error.message}</h2>
       )}
       {status === 'resolved' && (
         <>
