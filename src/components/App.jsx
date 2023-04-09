@@ -14,20 +14,14 @@ const App = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isShowModal, setIsShowModal] = useState(false);
   const [isShowLoadmore, setIsShowLoadmore] = useState(false);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchImages = () => {
-      getImages(searchQuery, currentPage)
-        .then(images => {
-          setImages(prevImages => [...prevImages, ...images.hits]);
-          setIsShowLoadmore(currentPage < Math.ceil(images.totalHits / 12));
-          setStatus('resolved');
-        })
-        .catch(error => {
-          setError(error);
-          setStatus('rejected');
-        });
+      getImages(searchQuery, currentPage).then(images => {
+        setImages(prevImages => [...prevImages, ...images.hits]);
+        setIsShowLoadmore(currentPage < Math.ceil(images.totalHits / 12));
+        setStatus('resolved');
+      });
     };
     if (searchQuery === '') {
       return;
