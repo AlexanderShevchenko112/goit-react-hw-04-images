@@ -65,22 +65,23 @@ const App = () => {
       {status === 'rejected' && (
         <h2 className={css.appHeaders}>{error.message}</h2>
       )}
-      {status === 'resolved' && (
-        <>
-          {images.length > 0 ? (
-            <>
-              <ImageGallery images={images} onSelect={onSelectImage} />
-              {isShowLoadmore && (
-                <Button onClick={handleLoadmore}>Load more</Button>
-              )}
-            </>
-          ) : (
-            <h2 className={css.appHeaders}>
-              Nothing was found. Please try another search.
-            </h2>
-          )}
-        </>
-      )}
+
+      <>
+        {images.length > 0 && (
+          <>
+            <ImageGallery images={images} onSelect={onSelectImage} />
+            {isShowLoadmore && (
+              <Button onClick={handleLoadmore}>Load more</Button>
+            )}
+          </>
+        )}
+        {images.length === 0 && status === 'resolved' && (
+          <h2 className={css.appHeaders}>
+            Nothing was found. Please try another search.
+          </h2>
+        )}
+      </>
+
       {isShowModal && (
         <ModalComponent
           onClose={toggleModal}
